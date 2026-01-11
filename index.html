@@ -54,6 +54,51 @@
         .zoomable {
             cursor: zoom-in;
         }
+
+        /* Modal dropdown styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 90;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 1.5rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 2rem;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close {
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #059669;
+        }
     </style>
 </head>
 
@@ -336,12 +381,13 @@
     <footer class="py-12 bg-white border-t border-slate-200">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-8">
             <div class="text-slate-400 text-sm">
-                © 2026 Bürgerinitiative Grieskirchen Vision 2040
+                © 2026 GPLv3 - powered by GitHub - aided by AI
             </div>
             <div class="flex gap-6 text-slate-500 text-sm font-medium">
-                <a href="#" class="hover:text-emerald-600">Impressum</a>
-                <a href="#" class="hover:text-emerald-600">Kontakt</a>
-                <a href="#" class="hover:text-emerald-600">Datenschutz</a>
+                <a href="#" onclick="openModal('impressum'); return false;" class="hover:text-emerald-600">Impressum</a>
+                <a href="#" onclick="openModal('kontakt'); return false;" class="hover:text-emerald-600">Kontakt</a>
+                <a href="#" onclick="openModal('datenschutz'); return false;"
+                    class="hover:text-emerald-600">Datenschutz</a>
             </div>
         </div>
     </footer>
@@ -349,6 +395,81 @@
     <!-- Lightbox Modal -->
     <div id="lightbox" class="lightbox" onclick="closeLightbox()">
         <img id="lightbox-img" src="" alt="Zoomed image">
+    </div>
+
+    <!-- Impressum Modal -->
+    <div id="modal-impressum" class="modal-overlay" onclick="closeModal('impressum')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-slate-900">Impressum</h3>
+                <span class="modal-close text-slate-400" onclick="closeModal('impressum')">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </span>
+            </div>
+            <div>
+                <img src="img/impressum.jpg" alt="Impressum Informationen" class="w-full max-w-sm">
+            </div>
+        </div>
+    </div>
+
+    <!-- Kontakt Modal -->
+    <div id="modal-kontakt" class="modal-overlay" onclick="closeModal('kontakt')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-slate-900">Kontakt</h3>
+                <span class="modal-close text-slate-400" onclick="closeModal('kontakt')">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </span>
+            </div>
+            <form action="https://formspree.io/f/xzddpwqn" method="POST" class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Ihre E-Mail</label>
+                    <input type="email" name="email" required
+                        class="w-full px-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 mb-1">Ihre Nachricht</label>
+                    <textarea name="message" rows="4" required
+                        class="w-full px-4 py-2 border border-slate-300 rounded-xl focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 outline-none transition resize-none"></textarea>
+                </div>
+                <button type="submit"
+                    class="w-full bg-emerald-600 text-white py-3 rounded-xl font-semibold hover:bg-emerald-700 transition-colors">
+                    Nachricht senden
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Datenschutz Modal -->
+    <div id="modal-datenschutz" class="modal-overlay" onclick="closeModal('datenschutz')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-2xl font-bold text-slate-900">Datenschutzerklärung</h3>
+                <span class="modal-close text-slate-400" onclick="closeModal('datenschutz')">
+                    <i data-lucide="x" class="w-6 h-6"></i>
+                </span>
+            </div>
+            <div class="space-y-4 text-slate-600 text-sm leading-relaxed">
+                <h4 class="font-semibold text-slate-800">1. Datenschutz auf einen Blick</h4>
+                <p>Diese Webseite nimmt den Schutz Ihrer persönlichen Daten sehr ernst. Wir behandeln Ihre
+                    personenbezogenen Daten vertraulich und entsprechend der gesetzlichen Datenschutzvorschriften sowie
+                    dieser Datenschutzerklärung.</p>
+
+                <h4 class="font-semibold text-slate-800">2. Datenerfassung</h4>
+                <p>Diese Webseite erfasst keine personenbezogenen Daten automatisch. Wenn Sie das Kontaktformular
+                    nutzen, werden die von Ihnen eingegebenen Daten (E-Mail, Nachricht) über Formspree verarbeitet und
+                    an den Webseitenbetreiber übermittelt.</p>
+
+                <h4 class="font-semibold text-slate-800">3. Ihre Rechte</h4>
+                <p>Gemäß DSGVO und österreichischem Datenschutzgesetz (DSG) haben Sie das Recht auf Auskunft,
+                    Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch. Bei
+                    Fragen wenden Sie sich an den Webseitenbetreiber.</p>
+
+                <h4 class="font-semibold text-slate-800">4. Hosting</h4>
+                <p>Diese Webseite wird über GitHub Pages gehostet. Informationen zur Datenverarbeitung durch GitHub
+                    finden Sie in deren Datenschutzerklärung.</p>
+            </div>
+        </div>
     </div>
 
     <!-- Initialize Lucide Icons & Lightbox -->
@@ -374,8 +495,25 @@
         }
 
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'Escape') {
+                closeLightbox();
+                closeModal('impressum');
+                closeModal('kontakt');
+                closeModal('datenschutz');
+            }
         });
+
+        // Modal functionality
+        function openModal(id) {
+            document.getElementById('modal-' + id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+            lucide.createIcons();
+        }
+
+        function closeModal(id) {
+            document.getElementById('modal-' + id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
     </script>
 </body>
 
